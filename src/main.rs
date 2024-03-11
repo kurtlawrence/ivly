@@ -19,7 +19,11 @@ fn main() -> miette::Result<()> {
     let dir = &if cfg!(debug_assertions) {
         "./target/.ivly".to_string()
     } else {
-        std::env::var("IVLY_DIR").unwrap_or_else(|_| "~/.ivly".to_string())
+        std::env::var("IVLY_DIR").unwrap_or_else(|_| {
+            std::env::var("HOME")
+                .map(|x| format!("{x}/.ivly"))
+                .unwrap_or_else(|_| String::from(".ivly"))
+        })
     };
     std::fs::create_dir_all(dir).into_diagnostic()?;
 
