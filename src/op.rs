@@ -62,8 +62,15 @@ fn translate_task_num(tasks: &TodoTasks, num: usize) -> Result<usize> {
     Ok(num - 1)
 }
 
-pub fn finish(dir: &Path, task_num: usize) -> Result<()> {
+pub fn finish(dir: &Path, task_num: Option<usize>) -> Result<()> {
     let (mut tasks, tags) = read_tasks_tags(dir);
+    let task_num = task_num.unwrap_or_else(|| {
+        tasks
+            .iter()
+            .position(|t| !t.is_finished())
+            .unwrap_or_default()
+            + 1
+    });
     let index = translate_task_num(&tasks, task_num)?;
     let task = tasks.get_mut(index).unwrap();
     task.finish();

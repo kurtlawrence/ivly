@@ -92,11 +92,13 @@ impl TodoTask {
     }
 
     pub fn finish(&mut self) {
-        self.state = Todo {
-            marked: Some(Done {
-                completed: crate::now(),
-            }),
-        };
+        if self.state.marked.is_none() {
+            self.state = Todo {
+                marked: Some(Done {
+                    completed: crate::now(),
+                }),
+            };
+        }
     }
 
     pub fn is_finished(&self) -> bool {

@@ -116,8 +116,8 @@ pub enum Cmd {
 
     /// Finish a task.
     Finish {
-        /// The task number.
-        task_num: usize,
+        /// The task number. If not specified, finishes the **first** available task.
+        task_num: Option<usize>,
     },
 
     /// Move finished tasks into done list.
