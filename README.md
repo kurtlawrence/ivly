@@ -10,7 +10,7 @@ The Ivy Lee method is simple.
 4. Approach the rest of your list in the same fashion. At the end of the day, move any unfinished items to a new list of six tasks for the following day.
 5. Repeat this process every working day.
 
-![](use.mp4)
+https://github.com/kurtlawrence/ivly/assets/13831379/f1830524-cf1b-4794-8741-b5ff6ddb0d8c
 
 ## Install
 
