@@ -2,6 +2,7 @@ use colored::{Color, ColoredString, Colorize};
 use std::{collections::BTreeMap, ops::Deref, str::FromStr};
 
 #[derive(serde::Deserialize, serde::Serialize, Default)]
+#[serde(transparent)]
 pub struct Tags(BTreeMap<String, Style>);
 
 #[derive(serde::Deserialize, serde::Serialize)]
