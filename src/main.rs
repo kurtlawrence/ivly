@@ -6,6 +6,8 @@ mod op;
 mod print;
 mod tags;
 mod task;
+#[cfg(test)]
+mod tests;
 mod tui;
 
 use clap::{Parser, Subcommand};

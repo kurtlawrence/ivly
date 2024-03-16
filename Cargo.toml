@@ -21,3 +21,7 @@ ratatui = "0.26.1"
 ron = "0.8.1"
 serde = { version = "1.0.197", features = ["derive"] }
 
+[dev-dependencies]
+assert_cmd = "2.0.14"
+insta = { version = "1.36.1", features = ["redactions", "ron"] }
+

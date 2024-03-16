@@ -1,0 +1,20 @@
+---
+source: src/tests.rs
+assertion_line: 38
+expression: open
+---
+[
+  Task(
+    id: "[id]",
+    description: "This is a new task 2",
+    note: "with a note",
+    created: "[created]",
+    tags: [
+      "tag1",
+      "tag-2",
+    ],
+    state: Todo(
+      marked: None,
+    ),
+  ),
+]
