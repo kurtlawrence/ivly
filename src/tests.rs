@@ -75,6 +75,8 @@ fn cli_tests() {
     cmd().arg("mv").args(["1", "2"]).assert().success();
     cmd().arg("list").assert().success();
     cmd().arg("ls").assert().success();
+    cmd().arg("f").args(["1", "2"]).assert().success();
+    cmd().arg("bump").args(["1", "2"]).assert().success();
 }
 
 #[test]

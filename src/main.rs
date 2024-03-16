@@ -50,9 +50,23 @@ fn main() -> miette::Result<()> {
             Some(desc) => op::add(dir, desc, note, tags),
             None => op::add_interactive(dir),
         }?,
-        Some(Cmd::Finish { task_num }) => op::finish(dir, task_num)?,
+        Some(Cmd::Finish { task_num }) => {
+            if task_num.is_empty() {
+                op::finish(dir, None)?;
+            } else {
+                for n in task_num {
+                    op::finish(dir, n.into())?;
+                }
+            }
+        }
         Some(Cmd::Sweep) => op::sweep(dir)?,
-        Some(Cmd::Bump { task_num }) => op::bump(dir, task_num)?,
+        Some(Cmd::Bump { mut task_num }) => {
+            task_num.sort_unstable();
+            task_num.dedup();
+            for task_num in task_num.into_iter().rev() {
+                op::bump(dir, task_num)?;
+            }
+        }
         Some(Cmd::Move {
             task_num,
             insert_before,
@@ -121,7 +135,7 @@ pub enum Cmd {
     #[command(alias("f"))]
     Finish {
         /// The task number. If not specified, finishes the **first** available task.
-        task_num: Option<usize>,
+        task_num: Vec<usize>,
     },
 
     /// Move finished tasks into done list.
@@ -130,7 +144,7 @@ pub enum Cmd {
     /// Bump a task to the end of the open list.
     Bump {
         /// The task number.
-        task_num: usize,
+        task_num: Vec<usize>,
     },
 
     /// Move a task.
