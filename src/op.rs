@@ -237,7 +237,7 @@ pub fn edit_tag(
     }
 
     io::write_tags(dir, &tags)?;
-    print::tags(&tags);
+    print::tags(&tags, std::io::stdout());
     Ok(())
 }
 
