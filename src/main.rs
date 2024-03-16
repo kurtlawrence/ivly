@@ -105,6 +105,7 @@ pub struct App {
 pub enum Cmd {
     /// Add a new task.
     /// If no description specified, enters interactive add mode.
+    #[command(alias("a"))]
     Add {
         /// The task description.
         description: Option<String>,
@@ -117,6 +118,7 @@ pub enum Cmd {
     },
 
     /// Finish a task.
+    #[command(alias("f"))]
     Finish {
         /// The task number. If not specified, finishes the **first** available task.
         task_num: Option<usize>,
@@ -133,6 +135,7 @@ pub enum Cmd {
 
     /// Move a task.
     /// If no task numbers are specified, enters interactive move mode.
+    #[command(alias("mv"))]
     Move {
         /// The task number.
         task_num: Option<usize>,
@@ -141,6 +144,7 @@ pub enum Cmd {
     },
 
     /// List the tasks.
+    #[command(alias("ls"))]
     List {
         /// Only show open tasks.
         #[clap(long)]
