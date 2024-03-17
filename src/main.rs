@@ -14,6 +14,7 @@ use clap::{Parser, Subcommand};
 use miette::IntoDiagnostic;
 use std::time::Duration;
 use tags::{AddTag, FilterTag};
+use colored::*;
 
 fn main() -> miette::Result<()> {
     let app = App::parse();
@@ -35,12 +36,19 @@ fn main() -> miette::Result<()> {
         None => {
             let tasks = io::read_open_tasks(dir);
             let tags = io::read_tags(dir);
-            tasks
+            let mut ts = tasks
                 .iter()
                 .enumerate()
-                .filter(|(_, task)| app.tags.iter().all(|f| f.filter(task.tags())))
+                .filter(|(_, task)| app.tags.iter().all(|f| f.filter(task.tags())));
+
+            ts.by_ref()
                 .take(6)
                 .for_each(|(i, t)| print::todo_task(i, t, &tags));
+            let rem = ts.count();
+            if rem > 0 {
+                println!();
+                println!("      {}", format!("{rem} tasks in backlog").italic().truecolor(127,127,127));
+            }
         }
         Some(Cmd::Add {
             description,
