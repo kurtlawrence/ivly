@@ -11,10 +11,10 @@ mod tests;
 mod tui;
 
 use clap::{Parser, Subcommand};
+use colored::*;
 use miette::IntoDiagnostic;
 use std::time::Duration;
 use tags::{AddTag, FilterTag};
-use colored::*;
 
 fn main() -> miette::Result<()> {
     let app = App::parse();
@@ -47,7 +47,12 @@ fn main() -> miette::Result<()> {
             let rem = ts.count();
             if rem > 0 {
                 println!();
-                println!("      {}", format!("{rem} tasks in backlog").italic().truecolor(127,127,127));
+                println!(
+                    "      {}",
+                    format!("{rem} tasks in backlog")
+                        .italic()
+                        .truecolor(127, 127, 127)
+                );
             }
         }
         Some(Cmd::Add {
