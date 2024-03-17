@@ -59,9 +59,16 @@ fn main() -> miette::Result<()> {
             description,
             note,
             tags,
-        }) => match description {
-            Some(desc) => op::add(dir, desc, note, tags),
-            None => op::add_interactive(dir),
+            tui,
+        }) => {
+            if tui {
+                op::move_interactive(dir)
+            } else {
+                match description {
+                    Some(desc) => op::add(dir, desc, note, tags),
+                    None => op::add_interactive(dir),
+                }
+            }
         }?,
         Some(Cmd::Finish { task_num }) => {
             if task_num.is_empty() {
@@ -142,6 +149,9 @@ pub enum Cmd {
         /// Task tags.
         /// Tags should be prefixed with +.
         tags: Vec<AddTag>,
+        /// Use an interactive adding TUI.
+        #[arg(long, short('i'))]
+        tui: bool,
     },
 
     /// Finish a task.
