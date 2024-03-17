@@ -3,6 +3,8 @@ use std::path::Path;
 
 #[test]
 fn main_integration_test() {
+    colored::control::set_override(true); // always colour for testing
+
     let dir = Path::new("./target/integration-test");
     std::fs::remove_dir_all(dir).ok();
     std::fs::create_dir_all(dir).unwrap();
