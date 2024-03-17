@@ -22,30 +22,52 @@ pub fn add(dir: &Path, description: String, note: Option<String>, tags: Vec<AddT
     if let Some(note) = note {
         task.note = note;
     }
-    for tag in tags {
+    for tag in tags.clone() {
         task.add_tag(tag);
     }
     let mut tasks = io::read_open_tasks(dir);
-    let tags = io::read_tags(dir);
+    let tags_ = io::read_tags(dir);
     tasks.push(task);
 
     io::write_open_tasks(dir, &tasks)?;
+    io::write_last_tags(
+        dir,
+        tags.into_iter()
+            .map(String::from)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    )?;
 
     let (i, task) = tasks.iter().enumerate().last().unwrap();
     println!("✅ Added new task! ID: {}", task.id());
-    print::todo_task(i, task, &tags);
+    print::todo_task(i, task, &tags_);
     Ok(())
 }
 
 pub fn add_interactive(dir: &Path) -> Result<()> {
+    let last_tags = io::read_last_tags(dir);
+    let tags = io::read_tags(dir);
     let desc = ask("Task description:")?;
     let note = ask("Task note:")?;
-    let tags = ask("Tags:")?;
-    let mut ts = Vec::new();
-    for tag in tags.split(' ') {
-        let tag = tag.parse().map_err(|e| miette!("{e}"))?;
-        ts.push(tag);
-    }
+    let tags = if last_tags.is_empty() {
+        ask("Tags:")
+    } else {
+        let q = last_tags.iter().fold(String::new(), |s, t| {
+            s + " " + &tags.colourise(t, &format!("+{t}")).to_string()
+        });
+        let q = format!("Tags [{}] (u to use):", q.trim());
+        ask(&q)
+    }?;
+    let ts = if tags == "u" {
+        last_tags.into_iter().map(AddTag).collect::<Vec<_>>()
+    } else {
+        let mut ts = Vec::new();
+        for tag in tags.split(' ') {
+            let tag = tag.parse().map_err(|e| miette!("{e}"))?;
+            ts.push(tag);
+        }
+        ts
+    };
     add(dir, desc, note.is_empty().not().then_some(note), ts)
 }
 
