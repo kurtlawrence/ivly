@@ -6,9 +6,12 @@ mod op;
 mod print;
 mod tags;
 mod task;
+#[cfg(test)]
+mod tests;
 mod tui;
 
 use clap::{Parser, Subcommand};
+use colored::*;
 use miette::IntoDiagnostic;
 use std::time::Duration;
 use tags::{AddTag, FilterTag};
@@ -33,24 +36,57 @@ fn main() -> miette::Result<()> {
         None => {
             let tasks = io::read_open_tasks(dir);
             let tags = io::read_tags(dir);
-            tasks
+            let mut ts = tasks
                 .iter()
                 .enumerate()
-                .filter(|(_, task)| app.tags.iter().all(|f| f.filter(task.tags())))
+                .filter(|(_, task)| app.tags.iter().all(|f| f.filter(task.tags())));
+
+            ts.by_ref()
                 .take(6)
                 .for_each(|(i, t)| print::todo_task(i, t, &tags));
+            let rem = ts.count();
+            if rem > 0 {
+                println!();
+                println!(
+                    "      {}",
+                    format!("{rem} tasks in backlog")
+                        .italic()
+                        .truecolor(127, 127, 127)
+                );
+            }
         }
         Some(Cmd::Add {
             description,
             note,
             tags,
-        }) => match description {
-            Some(desc) => op::add(dir, desc, note, tags),
-            None => op::add_interactive(dir),
+            tui,
+        }) => {
+            if tui {
+                op::move_interactive(dir)
+            } else {
+                match description {
+                    Some(desc) => op::add(dir, desc, note, tags),
+                    None => op::add_interactive(dir),
+                }
+            }
         }?,
-        Some(Cmd::Finish { task_num }) => op::finish(dir, task_num)?,
+        Some(Cmd::Finish { task_num }) => {
+            if task_num.is_empty() {
+                op::finish(dir, None)?;
+            } else {
+                for n in task_num {
+                    op::finish(dir, n.into())?;
+                }
+            }
+        }
         Some(Cmd::Sweep) => op::sweep(dir)?,
-        Some(Cmd::Bump { task_num }) => op::bump(dir, task_num)?,
+        Some(Cmd::Bump { mut task_num }) => {
+            task_num.sort_unstable();
+            task_num.dedup();
+            for task_num in task_num.into_iter().rev() {
+                op::bump(dir, task_num)?;
+            }
+        }
         Some(Cmd::Move {
             task_num,
             insert_before,
@@ -103,6 +139,7 @@ pub struct App {
 pub enum Cmd {
     /// Add a new task.
     /// If no description specified, enters interactive add mode.
+    #[command(alias("a"))]
     Add {
         /// The task description.
         description: Option<String>,
@@ -112,12 +149,16 @@ pub enum Cmd {
         /// Task tags.
         /// Tags should be prefixed with +.
         tags: Vec<AddTag>,
+        /// Use an interactive adding TUI.
+        #[arg(long, short('i'))]
+        tui: bool,
     },
 
     /// Finish a task.
+    #[command(alias("f"))]
     Finish {
         /// The task number. If not specified, finishes the **first** available task.
-        task_num: Option<usize>,
+        task_num: Vec<usize>,
     },
 
     /// Move finished tasks into done list.
@@ -126,11 +167,12 @@ pub enum Cmd {
     /// Bump a task to the end of the open list.
     Bump {
         /// The task number.
-        task_num: usize,
+        task_num: Vec<usize>,
     },
 
     /// Move a task.
     /// If no task numbers are specified, enters interactive move mode.
+    #[command(alias("mv"))]
     Move {
         /// The task number.
         task_num: Option<usize>,
@@ -139,6 +181,7 @@ pub enum Cmd {
     },
 
     /// List the tasks.
+    #[command(alias("ls"))]
     List {
         /// Only show open tasks.
         #[clap(long)]

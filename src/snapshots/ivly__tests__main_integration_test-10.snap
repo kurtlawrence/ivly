@@ -1,0 +1,11 @@
+---
+source: src/tests.rs
+assertion_line: 57
+expression: tags
+---
+{
+  "tag-2": Style(
+    fg: "green",
+    bg: Some("red"),
+  ),
+}

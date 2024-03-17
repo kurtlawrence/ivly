@@ -1,0 +1,15 @@
+---
+source: src/tests.rs
+assertion_line: 40
+expression: done
+---
+[
+  Task(
+    id: "[id]",
+    description: "This is a new task",
+    created: "[created]",
+    state: Done(
+      completed: "[completed]",
+    ),
+  ),
+]

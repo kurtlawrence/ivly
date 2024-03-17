@@ -71,7 +71,7 @@ fn colour_string(c: Color) -> String {
 }
 
 #[derive(Clone)]
-pub struct AddTag(String);
+pub struct AddTag(pub String);
 
 impl Deref for AddTag {
     type Target = str;
@@ -82,6 +82,11 @@ impl Deref for AddTag {
 impl From<AddTag> for String {
     fn from(value: AddTag) -> Self {
         value.0
+    }
+}
+impl From<&str> for AddTag {
+    fn from(value: &str) -> Self {
+        AddTag(value.to_string())
     }
 }
 impl FromStr for AddTag {

@@ -21,5 +21,7 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Clippy
         run: cargo clippy -- -D warnings
+      - name: Build
+        run: cargo build
       - name: Test
         run: cargo test --workspace --all-features

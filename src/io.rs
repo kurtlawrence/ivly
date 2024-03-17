@@ -78,3 +78,19 @@ pub fn write_tags(dir: &Path, tags: &Tags) -> Result<()> {
         .wrap_err("failed to serialise tags")?;
     std::fs::write(file, s.as_bytes()).into_diagnostic()
 }
+
+pub fn read_last_tags(dir: &Path) -> Vec<String> {
+    let file = dir.join("last-tags.ron");
+    std::fs::read_to_string(file)
+        .ok()
+        .and_then(|x| ron::from_str(&x).ok())
+        .unwrap_or_default()
+}
+
+pub fn write_last_tags(dir: &Path, tags: &[String]) -> Result<()> {
+    let file = dir.join("last-tags.ron");
+    let s = ron::ser::to_string_pretty(tags, Default::default())
+        .into_diagnostic()
+        .wrap_err("failed to serialise tags")?;
+    std::fs::write(file, s.as_bytes()).into_diagnostic()
+}
