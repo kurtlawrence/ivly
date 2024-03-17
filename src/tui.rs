@@ -313,7 +313,6 @@ impl<'a> Move<'a> {
                             Text::from(format!("{}", i + 1)).right_aligned(),
                             desc,
                             note,
-
                             Text::from(days_ago(t.duration_since_creation())).centered(),
                             tags,
                         ]);
