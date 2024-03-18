@@ -198,6 +198,12 @@ impl<'a> Move<'a> {
                             *self.table_state.selected_mut() = Some(i.saturating_sub(0));
                         }
                     }
+                    KeyCode::Char('A') => {
+                        let i = self.tasks.len();
+                        self.tasks.push(TodoTask::new(""));
+                        *self.table_state.selected_mut() = Some(i);
+                        self.start_editing_desc()
+                    }
                     KeyCode::Char('?') => self.show_help = !self.show_help,
                     KeyCode::Char('e') => self.start_editing_desc(),
                     KeyCode::Char('n') => self.start_editing_note(),
@@ -347,6 +353,7 @@ fn render_help(frame: &mut Frame) {
         ]),
         Row::from_iter([Text::from("n").right_aligned(), Text::from("Edit note")]),
         Row::from_iter([Text::from("t").right_aligned(), Text::from("Edit tags")]),
+        Row::from_iter([Text::from("A").right_aligned(), Text::from("Add new task")]),
         Row::from_iter([Text::from("D").right_aligned(), Text::from("Remove task")]),
         Row::from_iter([Text::from("q").right_aligned(), Text::from("Save and exit")]),
         Row::from_iter([Text::from("x").right_aligned(), Text::from("Exit")]),
