@@ -99,8 +99,9 @@ fn main() -> miette::Result<()> {
         }?,
         Some(Cmd::List { open, done, tags }) => op::list(dir, open, done, tags),
         Some(Cmd::Tag { tag, fg, bg }) => op::edit_tag(dir, &tag, fg, bg)?,
+        Some(Cmd::Edit { task_id: None, .. }) => op::move_interactive(&dir)?,
         Some(Cmd::Edit {
-            task_id,
+            task_id: Some(task_id),
             desc,
             note,
             tags,
@@ -209,9 +210,10 @@ pub enum Cmd {
     },
 
     /// Edit a task's description, note, and/or tags.
+    /// If no id is given, drops into the TUI editor.
     Edit {
         /// The task ID.
-        task_id: String,
+        task_id: Option<String>,
         /// Set the tasks description.
         #[clap(short, long)]
         desc: Option<String>,
