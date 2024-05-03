@@ -169,7 +169,7 @@ impl<'a> Move<'a> {
             } else {
                 match key_ev.code {
                     KeyCode::Char('q') => self.exit = Exit::Save,
-                    KeyCode::Char('x') => self.exit = Exit::Forget,
+                    KeyCode::Char('X') => self.exit = Exit::Forget,
                     KeyCode::Up => {
                         *self.table_state.selected_mut() = self
                             .table_state
@@ -356,7 +356,7 @@ fn render_help(frame: &mut Frame) {
         Row::from_iter([Text::from("a").right_aligned(), Text::from("Add new task")]),
         Row::from_iter([Text::from("D").right_aligned(), Text::from("Remove task")]),
         Row::from_iter([Text::from("q").right_aligned(), Text::from("Save and exit")]),
-        Row::from_iter([Text::from("x").right_aligned(), Text::from("Exit")]),
+        Row::from_iter([Text::from("X").right_aligned(), Text::from("Exit")]),
     ];
     let ws = [5, 19];
     let width: u16 = ws.iter().sum();
