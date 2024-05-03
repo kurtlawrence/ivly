@@ -184,6 +184,10 @@ impl<'a> Move<'a> {
                                 .min(tlen)
                                 .into()
                     }
+                    KeyCode::Home => *self.table_state.selected_mut() = 0.into(),
+                    KeyCode::End => {
+                        *self.table_state.selected_mut() = tlen.saturating_sub(1).into()
+                    }
                     KeyCode::Char('=') => self.move_(|i| i.saturating_sub(1)),
                     KeyCode::Char('-') => self.move_(|i| (i + 2).min(tlen)),
                     KeyCode::Char('1') => self.move_(|_| 0),
