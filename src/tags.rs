@@ -84,11 +84,6 @@ impl From<AddTag> for String {
         value.0
     }
 }
-impl From<&str> for AddTag {
-    fn from(value: &str) -> Self {
-        AddTag(value.to_string())
-    }
-}
 impl FromStr for AddTag {
     type Err = &'static str;
     fn from_str(s: &str) -> Result<Self, Self::Err> {

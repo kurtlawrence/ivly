@@ -1,4 +1,4 @@
-use crate::{io, op, print, tags::Tags};
+use crate::{io, op, print, tags::Tags, AddTag};
 use std::path::Path;
 
 #[test]
@@ -24,7 +24,7 @@ fn main_integration_test() {
         dir,
         "This is a new task 2".into(),
         Some("with a note".to_string()),
-        vec!["tag1".into(), "tag-2".into()],
+        vec![AddTag("tag1".into()), AddTag("tag-2".into())],
     )
     .unwrap();
     let tasks = io::read_open_tasks(dir);

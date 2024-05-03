@@ -99,7 +99,7 @@ fn main() -> miette::Result<()> {
         }?,
         Some(Cmd::List { open, done, tags }) => op::list(dir, open, done, tags),
         Some(Cmd::Tag { tag, fg, bg }) => op::edit_tag(dir, &tag, fg, bg)?,
-        Some(Cmd::Edit { task_id: None, .. }) => op::move_interactive(&dir)?,
+        Some(Cmd::Edit { task_id: None, .. }) => op::move_interactive(dir)?,
         Some(Cmd::Edit {
             task_id: Some(task_id),
             desc,
