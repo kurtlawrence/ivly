@@ -58,7 +58,9 @@ pub fn add_interactive(dir: &Path) -> Result<()> {
         let q = format!("Tags [{}] (u to use):", q.trim());
         ask(&q)
     }?;
-    let ts = if tags == "u" {
+    let ts = if tags.trim().is_empty() {
+        Vec::new()
+    } else if tags == "u" {
         last_tags.into_iter().map(AddTag).collect::<Vec<_>>()
     } else {
         let mut ts = Vec::new();
