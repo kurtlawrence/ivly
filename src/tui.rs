@@ -140,7 +140,7 @@ impl<'a> Move<'a> {
         let instructions = if self.editing.is_editing() {
             "Enter to accept changes"
         } else {
-            "? Toggle Help  x Exit  q Save and exit"
+            "? Toggle Help  X Exit  q Save and exit"
         };
         let instructions = Text::from(instructions).centered();
         let size = Rect {
