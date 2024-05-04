@@ -72,9 +72,15 @@ impl Editing {
 
     /// If editing this description, creating the 'editing' text.
     fn desc(&self, idx_: usize, task: &TodoTask) -> Text {
-        match self {
-            Self::Desc { idx, val } if *idx == idx_ => Text::from(val.clone()).bold().yellow(),
-            _ => Text::from(task.description.clone()).bold(),
+        let txt = match self {
+            Self::Desc { idx, val } if *idx == idx_ => Text::from(val.clone()).yellow(),
+            _ => Text::from(task.description.clone()),
+        }
+        .bold();
+        if task.is_finished() {
+            txt.crossed_out()
+        } else {
+            txt
         }
     }
 
