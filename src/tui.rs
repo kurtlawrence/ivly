@@ -325,16 +325,13 @@ impl<'a> Move<'a> {
                         let desc = self.editing.desc(i, t);
                         let note = self.editing.note(i, t);
                         let tags = self.editing.tags(i, t);
-                        let mut row = Row::from_iter([
+                        let row = Row::from_iter([
                             Text::from(format!("{}", i + 1)).right_aligned(),
                             desc,
                             note,
                             Text::from(days_ago(t.duration_since_creation())).centered(),
                             tags,
                         ]);
-                        if i % 2 == 1 {
-                            row = row.style(Style::new().bg(Color::DarkGray));
-                        }
                         row
                     })
                     .collect::<Vec<_>>(),
